@@ -5,3 +5,5 @@ __pycache__/
 # ignore the virtual environment
 env/
 dist/
+.vscode/
+django_webpack_dev_server.egg-info/
