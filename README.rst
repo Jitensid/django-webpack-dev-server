@@ -1,21 +1,26 @@
+=====
+django-webpack-dev-server
+=====
 
 Django Webpack Dev Server is a Django app to create configuration files for frontend Javascript framework. It uses webpack to bundle your frontend code.
 
-## Installation
+Installation
+-----------
 
 Install using pip...
 
-```sh
-pip install django_webpack_dev_server
+```
+pip install django-webpack-dev-server
 ```
 
-## Quick start
+Quick start
+-----------
 
-1. Add "django_webpack_dev_server" to your INSTALLED_APPS setting like this::
+1. Add "django-webpack-dev-server" to your INSTALLED_APPS setting like this::
 
     INSTALLED_APPS = [
         ...
-        'django_webpack_dev_server',
+        'django-webpack-dev-server',
     ]
 
 2. Run ``python manage.py generate react`` to create a django app which has reactjs configuration.
@@ -27,6 +32,6 @@ pip install django_webpack_dev_server
 5. Start the django development server and cd into the new app and 
 	run npm start
 
-## License
-
+License
+-----------
 MIT
