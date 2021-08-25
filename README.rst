@@ -11,6 +11,11 @@ Install using pip...
 
 ``pip install django-webpack-dev-server``
 
+Supported Frontend Frameworks or Library
+----------------------------------------
+
+1. React (Javascript)
+
 
 Quick start
 -----------
@@ -30,8 +35,7 @@ Quick start
 
 5. Configure urls.py of the project to point it to the newly created django app.
 
-6. Start the django development server and cd into the new app and 
-	run npm start
+6. Start the django development server and cd into the new app and run npm start
 
 License
 -------
