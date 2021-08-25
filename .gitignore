@@ -1,3 +1,7 @@
-# Byte-compiled / optimized / DLL files
+# ignore byte compiled files created by Python
 __pycache__/
 *.py[cod]
+
+# ignore the virtual environment
+env/
+dist/
