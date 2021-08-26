@@ -34,7 +34,6 @@ class Command(BaseCommand):
 
         app_generator = Generator(app_name=app_name,
                                   frontend_library_or_framework=frontend_library_or_framework)
-
         app_generator.generate()
 
         self.show_success_message(' Your App is Ready !!!')

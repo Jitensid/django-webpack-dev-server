@@ -1,3 +1,4 @@
+# necessary imports
 import os
 import sys
 import shlex
@@ -13,49 +14,61 @@ from django_webpack_dev_server.management import constants
 import requests
 
 
+# Base Class to create a django app to create a django app with frontend configuration
 class Generator():
+    # app_name is the name of the django app
     app_name = None
+
+    # frontend_library_or_framework denotes the frontend framework or library requested
     frontend_library_or_framework = None
 
+    # shell_parameter = True for windows based system
+    # shell_parameter = False for non windows based system
+    shell_parameter = None
+
+    # set values of app_name, frontend_library_or_framework in the constructor
     def __init__(self, app_name, frontend_library_or_framework):
         self.app_name = app_name
         self.frontend_library_or_framework = frontend_library_or_framework
+        self.shell_parameter = sys.platform == constants.WINDOWS_OS_IDENTIFIER
 
     # validate the app_name provided by the user
     def validate_appname(self):
 
+        # if appname contains non alphanumeric characters then raise error
         if not self.app_name.isalnum():
             raise CommandError('App Name should be alphanumeric only')
 
     # check if system has node and npm installed
     def check_system_requirements(self):
 
+        # command to check node in system
         command_for_node = 'node -v'
+
+        # command to check npm in system
         command_for_npm = 'npm -v'
 
-        # checks whether npm is installed by getting node version
+        # checks whether node is installed by getting node version
         subprocess_node_command = subprocess.run(
             shlex.split(command_for_node), capture_output=True)
 
-        # Shell = True is required for windows based operating system only
-        shell_parameter = sys.platform == constants.WINDOWS_OS_IDENTIFIER
-
         # checks whether npm is installed by getting npm version
         subprocess_npm_command = subprocess.run(shlex.split(
-            command_for_npm), capture_output=True, shell=shell_parameter)
+            command_for_npm), capture_output=True, shell=self.shell_parameter)
 
-        # if either of the commands fail then raise error
+        # if either of the commands fail then raise an error
         if subprocess_node_command.returncode != 0 or subprocess_npm_command.returncode != 0:
             raise CommandError(
                 'Seems like node or npm is not available in your system')
 
     # checks if django settings file is configured properly
     def check_django_settings(self):
+        # if STATICFILES_DIRS value is missing then raise erorr and inform the user
         if len(settings.STATICFILES_DIRS) == 0:
             raise CommandError(
-                'STATICFILES_DIR attribute is missing in the django settings file')
+                'STATICFILES_DIRS attribute is missing in the django settings file')
 
-    # create templates directory and static directory inside the django app
+    # creates templates directory and static directory inside the django app
     def create_required_directories(self):
 
         static_directory_path, static_directory_name = os.path.split(
@@ -135,14 +148,20 @@ class Generator():
     def install_dependencies(self, thread_queue):
         os.chdir(self.app_name)
 
+        # command to install node dependencies
         command_for_npm_install = 'npm install'
 
+        # execute the npm install command for installing dependencies
         command = subprocess.Popen(
-            shlex.split(command_for_npm_install), shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            shlex.split(command_for_npm_install), shell=self.shell_parameter, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
+        # get any data genrated by the command and display it on stdout
         while True:
+
+            # read output lines one line at a time
             realtime_output = command.stdout.readline()
 
+            # if output line is empty then terminate the loop
             if realtime_output == '' or command.poll() is not None:
                 break
             elif realtime_output:
@@ -150,8 +169,10 @@ class Generator():
                 sys.stdout.flush()
 
         os.chdir('../')
+        # return the status of the installation command into the main thread
         thread_queue.put(command.returncode)
 
+    # install the necessary dependencies and display a progress bar until it executes
     def install_dependencies_and_show_progress_bar(self):
 
         widgets = [
@@ -163,24 +184,32 @@ class Generator():
             widgets=widgets, maxval=progressbar.UnknownLength, redirect_stdout=True)
         bar.start()
 
+        # thread_queue is used to fetch the output of the function executed in the other thread
         thread_queue = queue.Queue()
         count = 0
 
+        # create a thread which will execute the npm install command
         thread1 = threading.Thread(target=self.install_dependencies, args=[
             thread_queue], name='thread1')
+
+        # start the installation command by starting the thread
         thread1.start()
 
+        # display the progress until the other thread is alive
         while thread1.is_alive():
             count += 1
             bar.update(count)
 
+        # fetching status code of the command executed in other thread
         status = thread_queue.get()
 
+        # if command failed then inform the user
         if status != 0:
             raise CommandError(
                 'There were some errors while installing dependencies')
 
-    # generate a django app with the selected frontend framework or library
+    # generate a django app with the selected frontend
+    # Driver method which will execute the other methods
     def generate(self):
         self.validate_appname()
         self.check_system_requirements()
