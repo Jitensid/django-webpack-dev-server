@@ -1,3 +1,5 @@
+WINDOWS_OS_IDENTIFIER = 'win32'
+
 APP = 'APP'
 SRC = 'src'
 TEMPLATES = 'templates'

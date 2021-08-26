@@ -37,9 +37,12 @@ class Generator():
         subprocess_node_command = subprocess.run(
             shlex.split(command_for_node), capture_output=True)
 
+        # Shell = True is required for windows based operating system only
+        shell_parameter = sys.platform == constants.WINDOWS_OS_IDENTIFIER
+
         # checks whether npm is installed by getting npm version
         subprocess_npm_command = subprocess.run(shlex.split(
-            command_for_npm), capture_output=True, shell=True)
+            command_for_npm), capture_output=True, shell=shell_parameter)
 
         # if either of the commands fail then raise error
         if subprocess_node_command.returncode != 0 or subprocess_npm_command.returncode != 0:
