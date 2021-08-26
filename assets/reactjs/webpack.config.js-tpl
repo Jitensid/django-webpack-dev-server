@@ -73,6 +73,7 @@ module.exports = {
         changeOrigin: true,
       },
     },
+    open: true
   },
   plugins: [
     new webpack.DefinePlugin({

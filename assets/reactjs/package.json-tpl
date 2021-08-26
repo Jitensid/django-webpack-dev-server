@@ -4,7 +4,7 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-	  "start": "start http://localhost:8080/ && webpack-dev-server",
+	  "start": "webpack-dev-server",
 	  "build": "webpack --mode production"
 	},
 	"author": "",
