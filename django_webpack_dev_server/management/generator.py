@@ -14,7 +14,7 @@ from django_webpack_dev_server.management import constants
 import requests
 
 
-# Base Class to create a django app to create a django app with frontend configuration
+# Base Class to create a django app with frontend configuration
 class Generator():
     # app_name is the name of the django app
     app_name = None
@@ -91,16 +91,18 @@ class Generator():
         except OSError as error:
             raise CommandError(error)
 
-    # Download Files and replace app_name parameter
+    # Download Files and replace the parameters
     def download_template_files(self):
 
         template_files = constants.TEMPLATE_FILES_DICT.get(
             self.frontend_library_or_framework)
 
+        # replace the parameters with appropriate values
         substitute_parameters = {
             'app_name': self.app_name
         }
-
+        
+        # content-type required for plain text files
         text_document_content_type = 'text/plain; charset=utf-8'
 
         for directory_type, filename, download_url in template_files:
@@ -119,8 +121,11 @@ class Generator():
 
             target_filepath = os.path.join(target_filepath, filename)
 
+
+            # Download the file from the Git Repository
             download_file = requests.get(download_url, stream=True)
 
+            # write the contents of the file in the appropriate location
             with open(target_filepath, 'wb') as target_file:
 
                 try:
@@ -129,14 +134,17 @@ class Generator():
                 except OSError as error:
                     raise CommandError(error)
 
+            # if file is media file like image then no need for templating so skip them
             if download_file.headers['Content-Type'] != text_document_content_type:
                 continue
 
+            # open the text files and perform templating to replace the necessary parameters
             with open(target_filepath, 'r') as target_file:
                 source_file = Template(target_file.read())
                 modified_file_contents = source_file.substitute(
                     substitute_parameters)
 
+            # write the updated file in the appropriate location
             with open(target_filepath, 'w') as target_file:
 
                 try:
@@ -145,6 +153,7 @@ class Generator():
                 except OSError as error:
                     raise CommandError(error)
 
+    # method to install the dependencies by running npm install command 
     def install_dependencies(self, thread_queue):
         os.chdir(self.app_name)
 
@@ -208,7 +217,7 @@ class Generator():
             raise CommandError(
                 'There were some errors while installing dependencies')
 
-    # generate a django app with the selected frontend
+    # generate a django app with the selected frontend library or framework
     # Driver method which will execute the other methods
     def generate(self):
         self.validate_appname()

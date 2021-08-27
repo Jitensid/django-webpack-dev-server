@@ -1,6 +1,11 @@
 =========================
-django-webpack-dev-server
+django-webpack-dev-server 
 =========================
+
+.. image:: https://badge.fury.io/py/django-webpack-dev-server.svg
+    :target: https://badge.fury.io/py/django-webpack-dev-server
+    
+|
 
 Django Webpack Dev Server is a Django app to create configuration files for frontend Javascript framework. It uses webpack to bundle your frontend code.
 
