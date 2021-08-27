@@ -2,7 +2,7 @@
 django-webpack-dev-server 
 =========================
 
-.. image:: https://badge.fury.io/py/django-webpack-dev-server.svg
+.. image:: https://badge.fury.io/py/django-webpack-dev-server.svg?
     :target: https://badge.fury.io/py/django-webpack-dev-server
     
 |
