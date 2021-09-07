@@ -40,7 +40,9 @@ Quick start
 
 5. Configure urls.py of the project to point it to the newly created django app.
 
-6. Start the django development server and cd into the new app and run npm start
+6. Run ``python manage.py runserver`` to start the django's development Server.
+
+7. cd into the newly created django app and run ``npm start``
 
 License
 -------

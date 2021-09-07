@@ -1,17 +1,17 @@
-import React from "react";
-import reactlogo from "./reactlogo.png";
-import djangologo from "./djangologo.jpg";
-import "./App.css";
+import React from 'react';
+import reactlogo from './reactlogo.png';
+import djangologo from './djangologo.jpg';
+import './App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={djangologo} className="django-logo" alt="django" />
-        <img src={reactlogo} className="App-logo" alt="react" />
-      </header>
-    </div>
-  );
+	return (
+		<div className='App'>
+			<header className='App-header'>
+				<img src={djangologo} className='django-logo' alt='django' />
+				<img src={reactlogo} className='App-logo' alt='react' />
+			</header>
+		</div>
+	);
 }
 
 export default App;
