@@ -20,6 +20,7 @@ Supported Frontend Frameworks or Library
 ----------------------------------------
 
 1. React (Javascript)
+2. React (Typescript)
 
 
 Quick start

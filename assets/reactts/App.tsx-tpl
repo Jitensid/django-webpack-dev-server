@@ -1,6 +1,6 @@
-import reactlogo from './reactlogo.png';
-import djangologo from './djangologo.png';
 import './App.css';
+import djangologo from './djangologo.png';
+import reactlogo from './reactlogo.png';
 
 function App() {
 	return (

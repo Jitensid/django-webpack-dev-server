@@ -2,6 +2,7 @@
 import os
 import sys
 import shlex
+import shutil
 import subprocess
 import threading
 import progressbar
@@ -10,38 +11,58 @@ from string import Template
 from django.core.management.base import CommandError
 from django.core import management
 from django.conf import settings
-from django_webpack_dev_server.management import constants
 import requests
+from dotenv import dotenv_values
+
+# import the constants module
+from django_webpack_dev_server.management import constants
+
+# Load the environment variables to distinguish between development and production environments
+config = dotenv_values(".env")
 
 
-# Base Class to create a django app with frontend configuration
 class Generator():
-    # app_name is the name of the django app
+    '''
+    Base Class to create a django app with the necessary frontend configuration
+    '''
+
+    # app_name is the name of the django app which will have the frontend configuration
     app_name = None
 
-    # frontend_library_or_framework denotes the frontend framework or library requested
+    # frontend_library_or_framework denotes the frontend framework or library requested from the command line
     frontend_library_or_framework = None
 
     # shell_parameter = True for windows based system
     # shell_parameter = False for non windows based system
     shell_parameter = None
 
-    # set values of app_name, frontend_library_or_framework in the constructor
+    # set the values of app_name, frontend_library_or_framework in the constructor
     def __init__(self, app_name, frontend_library_or_framework):
+        '''
+        Constructor to set up the app_name and frontend_library_or_framework variables of the class
+        :param app_name: Name of the django app with frontend configuration
+        :param frontend_library_or_framework: Denotes the configuration to setup in the django app.
+        '''
         self.app_name = app_name
         self.frontend_library_or_framework = frontend_library_or_framework
+
+        # set the shell_parameter according to the operating system of the user
         self.shell_parameter = sys.platform == constants.WINDOWS_OS_IDENTIFIER
 
-    # validate the app_name provided by the user
     def validate_appname(self):
-
-        # if appname contains non alphanumeric characters then raise error
+        '''
+        Validates the app name of the django app provided by the user via commandline
+        '''
+        # if appname contains non alphanumeric characters then raise error and inform the user
         if not self.app_name.isalnum():
-            raise CommandError('App Name should be alphanumeric only')
+            raise CommandError(
+                constants.COMMAND_ERROR_MESSAGES_DICT['INVALID_APP_NAME_ERROR_MESSAGE'])
 
-    # check if system has node and npm installed
     def check_system_requirements(self):
-
+        '''
+        Checks if system has node and npm installed with the help of the 
+        subprocess module
+        '''
         # command to check node in system
         command_for_node = 'node -v'
 
@@ -56,33 +77,45 @@ class Generator():
         subprocess_npm_command = subprocess.run(shlex.split(
             command_for_npm), capture_output=True, shell=self.shell_parameter)
 
-        # if either of the commands fail then raise an error
+        # if either of the commands fail then raise an error and inform the user
         if subprocess_node_command.returncode != 0 or subprocess_npm_command.returncode != 0:
             raise CommandError(
-                'Seems like node or npm is not available in your system')
+                constants.COMMAND_ERROR_MESSAGES_DICT['SYSTEM_ERROR_MESSAGE'])
 
-    # checks if django settings file is configured properly
     def check_django_settings(self):
-        # if STATICFILES_DIRS value is missing then raise erorr and inform the user
+        '''
+        Checks if django settings file has the STATICFILES_DIRS attribute
+        STATICFILES_DIRS is required to store js and other types of files
+        when production script (npm run build) is executed
+        '''
+        # if STATICFILES_DIRS value is missing then raise error and inform the user
         if len(settings.STATICFILES_DIRS) == 0:
             raise CommandError(
-                'STATICFILES_DIRS attribute is missing in the django settings file')
+                constants.COMMAND_ERROR_MESSAGES_DICT['STATICFILES_DIRS_MISSING_ERROR_MESSAGE'])
 
-    # creates templates directory and static directory inside the django app
     def create_required_directories(self):
+        '''
+        Creates templates directory and static directory inside the django
+        app which will have the frontend configuration
+        '''
 
+        # get the STATICFILES_DIRS value from the django project settings
         static_directory_path, static_directory_name = os.path.split(
             settings.STATICFILES_DIRS[0])
 
+        # create the path for the templates directory
         templates_directory_path = os.path.join(
-            os.getcwd(), self.app_name, constants.TEMPLATES, self.app_name)
+            os.getcwd(), self.app_name, constants.TEMPLATES_DIRECTORY_NAME, self.app_name)
 
+        # create the path for the static directory
         static_directory_path = os.path.join(
             os.getcwd(), self.app_name, static_directory_name, self.app_name)
 
+        # create the path for the src directory
         src_directory_path = os.path.join(
-            os.getcwd(), self.app_name, constants.SRC)
+            os.getcwd(), self.app_name, constants.SRC_DIRECTORY_NAME)
 
+        # create the necessary directories inside the newly created django app
         try:
             os.makedirs(templates_directory_path)
             os.makedirs(static_directory_path)
@@ -91,38 +124,79 @@ class Generator():
         except OSError as error:
             raise CommandError(error)
 
-    # Download Files and replace the parameters
-    def download_template_files(self):
+    def check_if_file_is_text_document(self, filename):
+        '''
+        Check whether file is of form textdocument or an media file with the help of file extension
+        :param filename: name of the file to check
+        :return is_text_document: Whether the file is text document or a media file
+        '''
 
-        template_files = constants.TEMPLATE_FILES_DICT.get(
+        is_text_document = True
+
+        # get the extension of the file from the filename
+        _, file_extension = os.path.splitext(filename)
+
+        # list of non text document file extensions
+        non_text_document_file_extensions = ['.png', '.jpg']
+
+        # if the file extension is in the extensions list then return False
+        if file_extension in non_text_document_file_extensions:
+            return not is_text_document
+
+        return is_text_document
+
+    def get_target_path_of_template_file(self, filename, directory_type):
+        '''
+        Finds the path where the file after modifications
+        :param filename: name of the file to get the path
+        :param directory_type: name of the directory where file will be stored
+        :return target_filepath: final filepath of the file after it is substituted with the parameters
+        '''
+
+        # initialize the target_filepath as the current working directory
+        target_filepath = os.getcwd()
+
+        # append the specific path as per the directory in which the file would be stored
+        if directory_type == constants.APP_DIRECTORY_NAME:
+            target_filepath = os.path.join(target_filepath, self.app_name)
+
+        elif directory_type == constants.SRC_DIRECTORY_NAME:
+            target_filepath = os.path.join(
+                target_filepath, self.app_name, constants.SRC_DIRECTORY_NAME)
+
+        elif directory_type == constants.TEMPLATES_DIRECTORY_NAME:
+            target_filepath = os.path.join(
+                target_filepath, self.app_name, constants.TEMPLATES_DIRECTORY_NAME, self.app_name)
+
+        # append the filename into the target_filepath
+        target_filepath = os.path.join(target_filepath, filename)
+
+        # return the target_filepath
+        return target_filepath
+
+    def download_template_files(self):
+        '''
+        Download template files from the Git Repository and substitute the
+        necessary parameters
+        '''
+
+        # get all template files as per the requirement
+        template_files = constants.PROD_TEMPLATE_FILES_DICT.get(
             self.frontend_library_or_framework)
 
         # replace the parameters with appropriate values
         substitute_parameters = {
             'app_name': self.app_name
         }
-        
-        # content-type required for plain text files
-        text_document_content_type = 'text/plain; charset=utf-8'
 
+        # iterate all the tempate filenames
         for directory_type, filename, download_url in template_files:
-            target_filepath = os.getcwd()
 
-            if directory_type == constants.APP:
-                target_filepath = os.path.join(target_filepath, self.app_name)
+            # get the path where the file will be stored
+            target_filepath = self.get_target_path_of_template_file(
+                filename, directory_type)
 
-            elif directory_type == constants.SRC:
-                target_filepath = os.path.join(
-                    target_filepath, self.app_name, constants.SRC)
-
-            elif directory_type == constants.TEMPLATES:
-                target_filepath = os.path.join(
-                    target_filepath, self.app_name, constants.TEMPLATES, self.app_name)
-
-            target_filepath = os.path.join(target_filepath, filename)
-
-
-            # Download the file from the Git Repository
+            # Download the files from the Git Repository
             download_file = requests.get(download_url, stream=True)
 
             # write the contents of the file in the appropriate location
@@ -134,11 +208,58 @@ class Generator():
                 except OSError as error:
                     raise CommandError(error)
 
-            # if file is media file like image then no need for templating so skip them
-            if download_file.headers['Content-Type'] != text_document_content_type:
+            # if file is not a type of text document then do not perform
+            # string templating for it
+            if not self.check_if_file_is_text_document(filename):
                 continue
 
-            # open the text files and perform templating to replace the necessary parameters
+            # open the file and perform templating to replace the necessary parameters
+            with open(target_filepath, 'r') as target_file:
+                # read the file contents and substitute the parameters
+                source_file = Template(target_file.read())
+                modified_file_contents = source_file.substitute(
+                    substitute_parameters)
+
+            # write the updated file in the appropriate location
+            with open(target_filepath, 'w') as target_file:
+
+                try:
+                    target_file.write(modified_file_contents)
+
+                except OSError as error:
+                    raise CommandError(error)
+
+    def load_assets_from_local(self):
+        '''
+        A development only method executed when SOFTWARE_ENVIRONMENT_MODE == development
+        It loads the assets files from local system instead of downloading from the
+        Git Repository
+        '''
+
+        # get all template files as per the requirement
+        template_files = constants.DEVELOPMENT_TEMPLATE_FILES_DICT.get(
+            self.frontend_library_or_framework)
+
+        # replace the parameters with appropriate values
+        substitute_parameters = {
+            'app_name': self.app_name
+        }
+
+        # iterate all the tempate filenames
+        for directory_type, filename, local_asset_file_path in template_files:
+
+            # get the path where the file will be stored
+            target_filepath = self.get_target_path_of_template_file(
+                filename, directory_type)
+
+            # copy the template file from the local assets directory to the target path
+            shutil.copy(local_asset_file_path, target_filepath)
+
+            # if file is not a type of text document then do not template that file
+            if not self.check_if_file_is_text_document(filename):
+                continue
+
+            # open the files and perform templating to replace the necessary parameters
             with open(target_filepath, 'r') as target_file:
                 source_file = Template(target_file.read())
                 modified_file_contents = source_file.substitute(
@@ -153,8 +274,11 @@ class Generator():
                 except OSError as error:
                     raise CommandError(error)
 
-    # method to install the dependencies by running npm install command 
     def install_dependencies(self, thread_queue):
+        '''
+        Installs the node dependencies by executing npm install command
+        '''
+        # set the current working directory to the newly created django app
         os.chdir(self.app_name)
 
         # command to install node dependencies
@@ -174,21 +298,27 @@ class Generator():
             if realtime_output == '' or command.poll() is not None:
                 break
             elif realtime_output:
+                # display messages in stdout
                 print(realtime_output.strip().decode())
                 sys.stdout.flush()
 
+        # set the working directory to the original value
         os.chdir('../')
         # return the status of the installation command into the main thread
         thread_queue.put(command.returncode)
 
-    # install the necessary dependencies and display a progress bar until it executes
     def install_dependencies_and_show_progress_bar(self):
-
+        '''
+        Install the necessary node dependencies and display a progress bar
+        while the installation command executes
+        '''
+        # setting the progress bar message and type
         widgets = [
             'Installing Node Dependencies ',
             progressbar.AnimatedMarker()
         ]
 
+        # create an indefinite progressbar because installing dependencies is not equal for all users
         bar = progressbar.ProgressBar(
             widgets=widgets, maxval=progressbar.UnknownLength, redirect_stdout=True)
         bar.start()
@@ -215,15 +345,25 @@ class Generator():
         # if command failed then inform the user
         if status != 0:
             raise CommandError(
-                'There were some errors while installing dependencies')
+                constants.COMMAND_ERROR_MESSAGES_DICT['NPM_INSTALLATION_ERROR_MESSAGE'])
 
-    # generate a django app with the selected frontend library or framework
-    # Driver method which will execute the other methods
     def generate(self):
+        '''
+        Generates a django app with the selected frontend library or framework
+        Driver method which will execute the other methods
+        '''
         self.validate_appname()
         self.check_system_requirements()
         self.check_django_settings()
         management.call_command('startapp', self.app_name)
         self.create_required_directories()
-        self.download_template_files()
+
+        # In development mode the assets will be loaded from the local system
+        if config.get('SOFTWARE_ENVIRONMENT_MODE') == 'development':
+            self.load_assets_from_local()
+
+        # In production mode the assets will be downloaded from the Git Repository
+        else:
+            self.download_template_files()
+
         self.install_dependencies_and_show_progress_bar()

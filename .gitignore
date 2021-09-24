@@ -11,7 +11,7 @@ env/
 # ignore the dist folder produced after running setup.py
 dist/
 
-# ignore the django main project to test this package
+# ignore the django mysite project used to test this package
 mysite/
 
 django_webpack_dev_server.egg-info/

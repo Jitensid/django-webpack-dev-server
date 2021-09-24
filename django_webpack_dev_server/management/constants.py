@@ -1,33 +1,35 @@
+from django_webpack_dev_server.management.template_constants.development import development_constants
+from django_webpack_dev_server.management.template_constants.production import production_constants
+
+# To Identify if the operating system is windows based or not
 WINDOWS_OS_IDENTIFIER = 'win32'
 
-APP = 'APP'
-SRC = 'src'
-TEMPLATES = 'templates'
+APP_DIRECTORY_NAME = 'APP'
+SRC_DIRECTORY_NAME = 'src'
+TEMPLATES_DIRECTORY_NAME = 'templates'
 
-COMMON = 'Common'
-REACTJS = 'reactjs'
+COMMON_ASSETS_DIRECTORY = 'Common'
 
-REPO_BASE_URL = 'https://raw.githubusercontent.com/Jitensid/django-webpack-dev-server/main/assets/'
-
-COMMON_TEMPLATE_FILENAMES = [
-    (APP, 'urls.py', REPO_BASE_URL + COMMON + '/urls.py-tpl'),
-    (APP, 'views.py', REPO_BASE_URL + COMMON + '/views.py-tpl'),
-    (SRC, 'djangologo.jpg', REPO_BASE_URL + COMMON + '/djangologo.jpg'),
-    (TEMPLATES, 'index.html', REPO_BASE_URL + COMMON + '/index.html-tpl'),
-]
-
-REACTJS_TEMPLATE_FILENAMES = [
-    (APP, 'package.json', REPO_BASE_URL + REACTJS + '/package.json-tpl'),
-    (APP, 'webpack.config.js', REPO_BASE_URL + REACTJS + '/webpack.config.js-tpl'),
-    (APP, 'babel.config.json', REPO_BASE_URL + REACTJS + '/babel.config.json-tpl'),
-    (SRC, 'App.js', REPO_BASE_URL + REACTJS + '/App.js-tpl'),
-    (SRC, 'index.js', REPO_BASE_URL + REACTJS + '/index.js-tpl'),
-    (SRC, 'App.css', REPO_BASE_URL + REACTJS + '/App.css-tpl'),
-    (SRC, 'reactlogo.png', REPO_BASE_URL + REACTJS + '/reactlogo.png'),
-]
-
-REACTJS_TEMPLATE_FILENAMES = REACTJS_TEMPLATE_FILENAMES + COMMON_TEMPLATE_FILENAMES
-
-TEMPLATE_FILES_DICT = {
-    'react': REACTJS_TEMPLATE_FILENAMES,
+# Store the development template filenames with frontend library or framework as key
+DEVELOPMENT_TEMPLATE_FILES_DICT = {
+    'react_javascript': development_constants.DEV_ALL_REACTJS_TEMPLATE_FILES,
+    'react_typescript': development_constants.DEV_ALL_REACTTS_TEMPLATE_FILES
 }
+
+
+# Store template filenames with frontend library or framework as key
+PROD_TEMPLATE_FILES_DICT = {
+    'react_javascript': production_constants.PROD_ALL_REACTJS_TEMPLATE_FILES,
+    'react_typescript': production_constants.PROD_ALL_REACTTS_TEMPLATE_FILES
+}
+
+# show relevent error messages to the user
+COMMAND_ERROR_MESSAGES_DICT = {
+    'INVALID_APP_NAME_ERROR_MESSAGE': 'App Name should be alphanumeric only',
+    'SYSTEM_ERROR_MESSAGE': 'Seems like node or npm is not available in your system',
+    'STATICFILES_DIRS_MISSING_ERROR_MESSAGE': 'STATICFILES_DIRS attribute is missing in the django settings file',
+    'NPM_INSTALLATION_ERROR_MESSAGE': 'There were some errors while installing dependencies'
+}
+
+
+print('')

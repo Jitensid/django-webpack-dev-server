@@ -4,7 +4,7 @@ package_description = 'A Django app to create configuration files for frontend J
 
 setup(
     name='django-webpack-dev-server',
-    version='0.0.9',
+    version='0.0.10',
     packages=find_packages(),
     license='MIT',
     author='Jiten Sidhpura',
@@ -13,13 +13,14 @@ setup(
     long_description=open('README.rst').read(),
     long_description_content_type='text/x-rst',
     url='https://github.com/Jitensid/django-webpack-dev-server',
-    download_url='https://github.com/Jitensid/django-webpack-dev-server/archive/refs/tags/0.0.9.tar.gz',
-    install_requires=['requests', 'progressbar2'],
+    download_url='https://github.com/Jitensid/django-webpack-dev-server/archive/refs/tags/0.0.10.tar.gz',
+    install_requires=['requests', 'progressbar2', 'python-dotenv'],
     keywords=['django', 'webpack', 'webpack_dev_server', 'react'],
     classifiers=[
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Build Tools',
         'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.8',
