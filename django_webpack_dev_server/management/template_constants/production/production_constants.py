@@ -6,11 +6,12 @@ APP_DIRECTORY_NAME = 'APP'
 SRC_DIRECTORY_NAME = 'src'
 TEMPLATES_DIRECTORY_NAME = 'templates'
 
+
 COMMON_TEMPLATES_URLS_DICT = {
-    'urls.py-tpl': 'https://github.com/Jitensid/django-webpack-dev-server/blob/main/assets/Common/urls.py-tpl',
-    'views.py-tpl': 'https://github.com/Jitensid/django-webpack-dev-server/blob/main/assets/Common/views.py-tpl',
-    'index.html-tpl': 'https://github.com/Jitensid/django-webpack-dev-server/blob/main/assets/Common/index.html-tpl',
-    'djangologo.png': 'https://github.com/Jitensid/django-webpack-dev-server/blob/main/assets/Common/djangologo.png'
+    'urls.py-tpl': 'https://raw.githubusercontent.com/Jitensid/django-webpack-dev-server/main/assets/Common/urls.py-tpl',
+    'views.py-tpl': 'https://raw.githubusercontent.com/Jitensid/django-webpack-dev-server/main/assets/Common/views.py-tpl',
+    'index.html-tpl': 'https://raw.githubusercontent.com/Jitensid/django-webpack-dev-server/main/assets/Common/index.html-tpl',
+    'djangologo.png': 'https://raw.githubusercontent.com/Jitensid/django-webpack-dev-server/main/assets/Common/djangologo.png'
 }
 
 # Template files that will be common for any frontend library or framework

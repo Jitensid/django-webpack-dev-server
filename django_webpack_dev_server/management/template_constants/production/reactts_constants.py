@@ -2,17 +2,18 @@ APP_DIRECTORY_NAME = 'APP'
 SRC_DIRECTORY_NAME = 'src'
 TEMPLATES_DIRECTORY_NAME = 'templates'
 
+'https://raw.githubusercontent.com/Jitensid/django-webpack-dev-server/main/assets/reactts/package.json-tpl'
 # Production React Ts Template files having Github Repository Links
 REACTTS_TEMPLATES_URLS_DICT = {
-    'package.json-tpl': 'https://github.com/Jitensid/django-webpack-dev-server/blob/main/assets/reactts/package.json-tpl',
-    'webpack.config.js-tpl': 'https://github.com/Jitensid/django-webpack-dev-server/blob/main/assets/reactts/webpack.config.js-tpl',
-    'babel.config.json-tpl': 'https://github.com/Jitensid/django-webpack-dev-server/blob/main/assets/reactts/babel.config.json-tpl',
-    'tsconfig.json-tpl': 'https://github.com/Jitensid/django-webpack-dev-server/blob/main/assets/reactts/tsconfig.json-tpl',
-    'module.d.ts-tpl': 'https://github.com/Jitensid/django-webpack-dev-server/blob/main/assets/reactts/module.d.ts-tpl',
-    'App.tsx-tpl': 'https://github.com/Jitensid/django-webpack-dev-server/blob/main/assets/reactts/App.tsx-tpl',
-    'index.tsx-tpl': 'https://github.com/Jitensid/django-webpack-dev-server/blob/main/assets/reactts/index.tsx-tpl',
-    'App.css-tpl': 'https://github.com/Jitensid/django-webpack-dev-server/blob/main/assets/reactts/App.css-tpl',
-    'reactlogo.png': 'https://github.com/Jitensid/django-webpack-dev-server/blob/main/assets/reactts/reactlogo.png'
+    'package.json-tpl': 'https://raw.githubusercontent.com/Jitensid/django-webpack-dev-server/main/assets/reactts/package.json-tpl',
+    'webpack.config.js-tpl': 'https://raw.githubusercontent.com/Jitensid/django-webpack-dev-server/main/assets/reactts/webpack.config.js-tpl',
+    'babel.config.json-tpl': 'https://raw.githubusercontent.com/Jitensid/django-webpack-dev-server/main/assets/reactts/babel.config.json-tpl',
+    'tsconfig.json-tpl': 'https://raw.githubusercontent.com/Jitensid/django-webpack-dev-server/main/assets/reactts/tsconfig.json-tpl',
+    'module.d.ts-tpl': 'https://raw.githubusercontent.com/Jitensid/django-webpack-dev-server/main/assets/reactts/module.d.ts-tpl',
+    'App.tsx-tpl':  'https://raw.githubusercontent.com/Jitensid/django-webpack-dev-server/main/assets/reactts/App.tsx-tpl',
+    'index.tsx-tpl': 'https://raw.githubusercontent.com/Jitensid/django-webpack-dev-server/main/assets/reactts/index.tsx-tpl',
+    'App.css-tpl': 'https://raw.githubusercontent.com/Jitensid/django-webpack-dev-server/main/assets/reactts/App.css-tpl',
+    'reactlogo.png': 'https://raw.githubusercontent.com/Jitensid/django-webpack-dev-server/main/assets/reactts/reactlogo.png'
 }
 
 # Template files specific to react ts configuration
