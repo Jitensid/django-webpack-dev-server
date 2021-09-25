@@ -31,7 +31,7 @@ PROD_REACTTS_TEMPLATE_FILES = [
     (APP_DIRECTORY_NAME, 'tsconfig.json',
      REACTTS_TEMPLATES_URLS_DICT['tsconfig.json-tpl']),
 
-    (APP_DIRECTORY_NAME, 'module.d.ts',
+    (SRC_DIRECTORY_NAME, 'module.d.ts',
      REACTTS_TEMPLATES_URLS_DICT['module.d.ts-tpl']),
 
     (SRC_DIRECTORY_NAME, 'App.tsx',
