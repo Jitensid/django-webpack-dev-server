@@ -21,13 +21,16 @@ from django_webpack_dev_server.management import constants
 config = dotenv_values(".env")
 
 
-class Generator():
-    '''
+class Generator:
+    """
     Base Class to create a django app with the necessary frontend configuration
-    '''
+    """
 
     # app_name is the name of the django app which will have the frontend configuration
     app_name = None
+
+    # static_directory_name is the name of the the static directory inside the django app
+    static_directory_name = None
 
     # frontend_library_or_framework denotes the frontend framework or library requested from the command line
     frontend_library_or_framework = None
@@ -38,82 +41,83 @@ class Generator():
 
     # set the values of app_name, frontend_library_or_framework in the constructor
     def __init__(self, app_name, frontend_library_or_framework):
-        '''
+        """
         Constructor to set up the app_name and frontend_library_or_framework variables of the class
         :param app_name: Name of the django app with frontend configuration
         :param frontend_library_or_framework: Denotes the configuration to setup in the django app.
-        '''
+        """
         self.app_name = app_name
         self.frontend_library_or_framework = frontend_library_or_framework
+        self.static_directory_name = "static"
 
         # set the shell_parameter according to the operating system of the user
         self.shell_parameter = sys.platform == constants.WINDOWS_OS_IDENTIFIER
 
     def validate_appname(self):
-        '''
+        """
         Validates the app name of the django app provided by the user via commandline
-        '''
+        """
         # if appname contains non alphanumeric characters then raise error and inform the user
         if not self.app_name.isalnum():
             raise CommandError(
-                constants.COMMAND_ERROR_MESSAGES_DICT['INVALID_APP_NAME_ERROR_MESSAGE'])
+                constants.COMMAND_ERROR_MESSAGES_DICT["INVALID_APP_NAME_ERROR_MESSAGE"]
+            )
 
     def check_system_requirements(self):
-        '''
-        Checks if system has node and npm installed with the help of the 
+        """
+        Checks if system has node and npm installed with the help of the
         subprocess module
-        '''
+        """
         # command to check node in system
-        command_for_node = 'node -v'
+        command_for_node = "node -v"
 
         # command to check npm in system
-        command_for_npm = 'npm -v'
+        command_for_npm = "npm -v"
 
         # checks whether node is installed by getting node version
         subprocess_node_command = subprocess.run(
-            shlex.split(command_for_node), capture_output=True)
+            shlex.split(command_for_node), capture_output=True
+        )
 
         # checks whether npm is installed by getting npm version
-        subprocess_npm_command = subprocess.run(shlex.split(
-            command_for_npm), capture_output=True, shell=self.shell_parameter)
+        subprocess_npm_command = subprocess.run(
+            shlex.split(command_for_npm),
+            capture_output=True,
+            shell=self.shell_parameter,
+        )
 
         # if either of the commands fail then raise an error and inform the user
-        if subprocess_node_command.returncode != 0 or subprocess_npm_command.returncode != 0:
+        if (
+            subprocess_node_command.returncode != 0
+            or subprocess_npm_command.returncode != 0
+        ):
             raise CommandError(
-                constants.COMMAND_ERROR_MESSAGES_DICT['SYSTEM_ERROR_MESSAGE'])
-
-    def check_django_settings(self):
-        '''
-        Checks if django settings file has the STATICFILES_DIRS attribute
-        STATICFILES_DIRS is required to store js and other types of files
-        when production script (npm run build) is executed
-        '''
-        # if STATICFILES_DIRS value is missing then raise error and inform the user
-        if len(settings.STATICFILES_DIRS) == 0:
-            raise CommandError(
-                constants.COMMAND_ERROR_MESSAGES_DICT['STATICFILES_DIRS_MISSING_ERROR_MESSAGE'])
+                constants.COMMAND_ERROR_MESSAGES_DICT["SYSTEM_ERROR_MESSAGE"]
+            )
 
     def create_required_directories(self):
-        '''
+        """
         Creates templates directory and static directory inside the django
         app which will have the frontend configuration
-        '''
-
-        # get the STATICFILES_DIRS value from the django project settings
-        static_directory_path, static_directory_name = os.path.split(
-            settings.STATICFILES_DIRS[0])
+        """
 
         # create the path for the templates directory
         templates_directory_path = os.path.join(
-            os.getcwd(), self.app_name, constants.TEMPLATES_DIRECTORY_NAME, self.app_name)
+            os.getcwd(),
+            self.app_name,
+            constants.TEMPLATES_DIRECTORY_NAME,
+            self.app_name,
+        )
 
         # create the path for the static directory
         static_directory_path = os.path.join(
-            os.getcwd(), self.app_name, static_directory_name, self.app_name)
+            os.getcwd(), self.app_name, self.static_directory_name, self.app_name
+        )
 
         # create the path for the src directory
         src_directory_path = os.path.join(
-            os.getcwd(), self.app_name, constants.SRC_DIRECTORY_NAME)
+            os.getcwd(), self.app_name, constants.SRC_DIRECTORY_NAME
+        )
 
         # create the necessary directories inside the newly created django app
         try:
@@ -125,11 +129,11 @@ class Generator():
             raise CommandError(error)
 
     def check_if_file_is_text_document(self, filename):
-        '''
+        """
         Check whether file is of form textdocument or an media file with the help of file extension
         :param filename: name of the file to check
         :return is_text_document: Whether the file is text document or a media file
-        '''
+        """
 
         is_text_document = True
 
@@ -137,7 +141,7 @@ class Generator():
         _, file_extension = os.path.splitext(filename)
 
         # list of non text document file extensions
-        non_text_document_file_extensions = ['.png', '.jpg']
+        non_text_document_file_extensions = [".png"]
 
         # if the file extension is in the extensions list then return False
         if file_extension in non_text_document_file_extensions:
@@ -146,12 +150,12 @@ class Generator():
         return is_text_document
 
     def get_target_path_of_template_file(self, filename, directory_type):
-        '''
+        """
         Finds the path where the file after modifications
         :param filename: name of the file to get the path
         :param directory_type: name of the directory where file will be stored
         :return target_filepath: final filepath of the file after it is substituted with the parameters
-        '''
+        """
 
         # initialize the target_filepath as the current working directory
         target_filepath = os.getcwd()
@@ -162,11 +166,16 @@ class Generator():
 
         elif directory_type == constants.SRC_DIRECTORY_NAME:
             target_filepath = os.path.join(
-                target_filepath, self.app_name, constants.SRC_DIRECTORY_NAME)
+                target_filepath, self.app_name, constants.SRC_DIRECTORY_NAME
+            )
 
         elif directory_type == constants.TEMPLATES_DIRECTORY_NAME:
             target_filepath = os.path.join(
-                target_filepath, self.app_name, constants.TEMPLATES_DIRECTORY_NAME, self.app_name)
+                target_filepath,
+                self.app_name,
+                constants.TEMPLATES_DIRECTORY_NAME,
+                self.app_name,
+            )
 
         # append the filename into the target_filepath
         target_filepath = os.path.join(target_filepath, filename)
@@ -175,32 +184,32 @@ class Generator():
         return target_filepath
 
     def download_template_files(self):
-        '''
+        """
         Download template files from the Git Repository and substitute the
         necessary parameters
-        '''
+        """
 
         # get all template files as per the requirement
         template_files = constants.PROD_TEMPLATE_FILES_DICT.get(
-            self.frontend_library_or_framework)
+            self.frontend_library_or_framework
+        )
 
         # replace the parameters with appropriate values
-        substitute_parameters = {
-            'app_name': self.app_name
-        }
+        substitute_parameters = {"app_name": self.app_name}
 
         # iterate all the tempate filenames
         for directory_type, filename, download_url in template_files:
 
             # get the path where the file will be stored
             target_filepath = self.get_target_path_of_template_file(
-                filename, directory_type)
+                filename, directory_type
+            )
 
             # Download the files from the Git Repository
             download_file = requests.get(download_url, stream=True)
 
             # write the contents of the file in the appropriate location
-            with open(target_filepath, 'wb') as target_file:
+            with open(target_filepath, "wb") as target_file:
 
                 try:
                     target_file.write(download_file.content)
@@ -214,14 +223,13 @@ class Generator():
                 continue
 
             # open the file and perform templating to replace the necessary parameters
-            with open(target_filepath, 'r') as target_file:
+            with open(target_filepath, "r") as target_file:
                 # read the file contents and substitute the parameters
                 source_file = Template(target_file.read())
-                modified_file_contents = source_file.substitute(
-                    substitute_parameters)
+                modified_file_contents = source_file.substitute(substitute_parameters)
 
             # write the updated file in the appropriate location
-            with open(target_filepath, 'w') as target_file:
+            with open(target_filepath, "w") as target_file:
 
                 try:
                     target_file.write(modified_file_contents)
@@ -230,27 +238,27 @@ class Generator():
                     raise CommandError(error)
 
     def load_assets_from_local(self):
-        '''
+        """
         A development only method executed when SOFTWARE_ENVIRONMENT_MODE == development
         It loads the assets files from local system instead of downloading from the
         Git Repository
-        '''
+        """
 
         # get all template files as per the requirement
         template_files = constants.DEVELOPMENT_TEMPLATE_FILES_DICT.get(
-            self.frontend_library_or_framework)
+            self.frontend_library_or_framework
+        )
 
         # replace the parameters with appropriate values
-        substitute_parameters = {
-            'app_name': self.app_name
-        }
+        substitute_parameters = {"app_name": self.app_name}
 
         # iterate all the tempate filenames
         for directory_type, filename, local_asset_file_path in template_files:
 
             # get the path where the file will be stored
             target_filepath = self.get_target_path_of_template_file(
-                filename, directory_type)
+                filename, directory_type
+            )
 
             # copy the template file from the local assets directory to the target path
             shutil.copy(local_asset_file_path, target_filepath)
@@ -260,13 +268,12 @@ class Generator():
                 continue
 
             # open the files and perform templating to replace the necessary parameters
-            with open(target_filepath, 'r') as target_file:
+            with open(target_filepath, "r") as target_file:
                 source_file = Template(target_file.read())
-                modified_file_contents = source_file.substitute(
-                    substitute_parameters)
+                modified_file_contents = source_file.substitute(substitute_parameters)
 
             # write the updated file in the appropriate location
-            with open(target_filepath, 'w') as target_file:
+            with open(target_filepath, "w") as target_file:
 
                 try:
                     target_file.write(modified_file_contents)
@@ -275,18 +282,22 @@ class Generator():
                     raise CommandError(error)
 
     def install_dependencies(self, thread_queue):
-        '''
+        """
         Installs the node dependencies by executing npm install command
-        '''
+        """
         # set the current working directory to the newly created django app
         os.chdir(self.app_name)
 
         # command to install node dependencies
-        command_for_npm_install = 'npm install'
+        command_for_npm_install = "npm install"
 
         # execute the npm install command for installing dependencies
         command = subprocess.Popen(
-            shlex.split(command_for_npm_install), shell=self.shell_parameter, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            shlex.split(command_for_npm_install),
+            shell=self.shell_parameter,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+        )
 
         # get any data genrated by the command and display it on stdout
         while True:
@@ -295,7 +306,7 @@ class Generator():
             realtime_output = command.stdout.readline()
 
             # if output line is empty then terminate the loop
-            if realtime_output == '' or command.poll() is not None:
+            if realtime_output == "" or command.poll() is not None:
                 break
             elif realtime_output:
                 # display messages in stdout
@@ -303,24 +314,22 @@ class Generator():
                 sys.stdout.flush()
 
         # set the working directory to the original value
-        os.chdir('../')
+        os.chdir("../")
         # return the status of the installation command into the main thread
         thread_queue.put(command.returncode)
 
     def install_dependencies_and_show_progress_bar(self):
-        '''
+        """
         Install the necessary node dependencies and display a progress bar
         while the installation command executes
-        '''
+        """
         # setting the progress bar message and type
-        widgets = [
-            'Installing Node Dependencies ',
-            progressbar.AnimatedMarker()
-        ]
+        widgets = ["Installing Node Dependencies ", progressbar.AnimatedMarker()]
 
-        # create an indefinite progressbar because installing dependencies is not equal for all users
+        # create an indefinite progressbar because time for installing dependencies is not equal for all users
         bar = progressbar.ProgressBar(
-            widgets=widgets, maxval=progressbar.UnknownLength, redirect_stdout=True)
+            widgets=widgets, maxval=progressbar.UnknownLength, redirect_stdout=True
+        )
         bar.start()
 
         # thread_queue is used to fetch the output of the function executed in the other thread
@@ -328,8 +337,9 @@ class Generator():
         count = 0
 
         # create a thread which will execute the npm install command
-        thread1 = threading.Thread(target=self.install_dependencies, args=[
-            thread_queue], name='thread1')
+        thread1 = threading.Thread(
+            target=self.install_dependencies, args=[thread_queue], name="thread1"
+        )
 
         # start the installation command by starting the thread
         thread1.start()
@@ -345,21 +355,21 @@ class Generator():
         # if command failed then inform the user
         if status != 0:
             raise CommandError(
-                constants.COMMAND_ERROR_MESSAGES_DICT['NPM_INSTALLATION_ERROR_MESSAGE'])
+                constants.COMMAND_ERROR_MESSAGES_DICT["NPM_INSTALLATION_ERROR_MESSAGE"]
+            )
 
     def generate(self):
-        '''
+        """
         Generates a django app with the selected frontend library or framework
         Driver method which will execute the other methods
-        '''
+        """
         self.validate_appname()
         self.check_system_requirements()
-        self.check_django_settings()
-        management.call_command('startapp', self.app_name)
+        management.call_command("startapp", self.app_name)
         self.create_required_directories()
 
         # In development mode the assets will be loaded from the local system
-        if config.get('SOFTWARE_ENVIRONMENT_MODE') == 'development':
+        if config.get("SOFTWARE_ENVIRONMENT_MODE") == "development":
             self.load_assets_from_local()
 
         # In production mode the assets will be downloaded from the Git Repository
