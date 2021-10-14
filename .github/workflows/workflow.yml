@@ -8,12 +8,24 @@ on:
 jobs:
     test:
         runs-on: windows-latest
+
+        strategy:
+            matrix:
+                python: [3.8]
+
         steps:
-            - name: Install the Python Modules
+            - uses: actions/checkout@v2
+
+            - name: Setup Python
+              uses: actions/setup-python@v2
+              with:
+                  python-version: ${{ matrix.python }}
+
+            - name: Install the Python Dependencies
               run: pip install tox
 
             - name: Run Tox
-              run: tox -e py38
+              run: tox -e py
 
             - name: Upload coverage to Codecov
               uses: codecov/codecov-action@v2
