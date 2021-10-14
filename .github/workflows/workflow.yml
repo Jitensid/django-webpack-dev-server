@@ -12,10 +12,10 @@ jobs:
 		steps:
 
 			- name: Install the Python Modules
-			  run: pip install tox
+				run: pip install tox
 
 			- name: Run Tox to run tests for different versions of Python
-			  run: tox -e py38
+				run: tox -e py38
 
 			- name: Upload coverage to Codecov
-			  uses: codecov/codecov-action@v2
+				uses: codecov/codecov-action@v2
