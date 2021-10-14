@@ -1,24 +1,24 @@
 # necessary imports
 import os
-import sys
+import queue
 import shlex
 import shutil
 import subprocess
+import sys
 import threading
-import progressbar
-import queue
 from string import Template
-from django.core.management.base import CommandError
-from django.core import management
-from django.conf import settings
+
+import progressbar
 import requests
-from dotenv import dotenv_values
+from django.core import management
+from django.core.management.base import CommandError
 
 # import the constants module
 from django_webpack_dev_server.management import constants
+from dotenv import load_dotenv
 
-# Load the environment variables to distinguish between development and production environments
-config = dotenv_values(".env")
+# load the environment variables
+load_dotenv()
 
 
 class Generator:
@@ -43,8 +43,8 @@ class Generator:
     def __init__(self, app_name, frontend_library_or_framework):
         """
         Constructor to set up the app_name and frontend_library_or_framework variables of the class
-        :param app_name: Name of the django app with frontend configuration
-        :param frontend_library_or_framework: Denotes the configuration to setup in the django app.
+        :param app_name str: Name of the django app with frontend configuration
+        :param frontend_library_or_framework str: Denotes the configuration to setup in the django app.
         """
         self.app_name = app_name
         self.frontend_library_or_framework = frontend_library_or_framework
@@ -76,7 +76,9 @@ class Generator:
 
         # checks whether node is installed by getting node version
         subprocess_node_command = subprocess.run(
-            shlex.split(command_for_node), capture_output=True
+            shlex.split(command_for_node),
+            capture_output=True,
+            shell=self.shell_parameter,
         )
 
         # checks whether npm is installed by getting npm version
@@ -131,8 +133,8 @@ class Generator:
     def check_if_file_is_text_document(self, filename):
         """
         Check whether file is of form textdocument or an media file with the help of file extension
-        :param filename: name of the file to check
-        :return is_text_document: Whether the file is text document or a media file
+        :param filename str: name of the file to check
+        :return is_text_document bool: Whether the file is text document or a media file
         """
 
         is_text_document = True
@@ -147,14 +149,15 @@ class Generator:
         if file_extension in non_text_document_file_extensions:
             return not is_text_document
 
+        # return the boolean value
         return is_text_document
 
     def get_target_path_of_template_file(self, filename, directory_type):
         """
         Finds the path where the file after modifications
-        :param filename: name of the file to get the path
-        :param directory_type: name of the directory where file will be stored
-        :return target_filepath: final filepath of the file after it is substituted with the parameters
+        :param filename str: name of the file to get the path
+        :param directory_type str: name of the directory where file will be stored
+        :return target_filepath str: final filepath of the file after it is substituted with the parameters
         """
 
         # initialize the target_filepath as the current working directory
@@ -284,6 +287,8 @@ class Generator:
     def install_dependencies(self, thread_queue):
         """
         Installs the node dependencies by executing npm install command
+        :param thread_queue Queue: Queue which will pass the status of the command
+        to main thread
         """
         # set the current working directory to the newly created django app
         os.chdir(self.app_name)
@@ -328,7 +333,7 @@ class Generator:
 
         # create an indefinite progressbar because time for installing dependencies is not equal for all users
         bar = progressbar.ProgressBar(
-            widgets=widgets, maxval=progressbar.UnknownLength, redirect_stdout=True
+            widgets=widgets, max_value=progressbar.UnknownLength, redirect_stdout=True
         )
         bar.start()
 
@@ -369,7 +374,8 @@ class Generator:
         self.create_required_directories()
 
         # In development mode the assets will be loaded from the local system
-        if config.get("SOFTWARE_ENVIRONMENT_MODE") == "development":
+        if os.environ.get("SOFTWARE_ENVIRONMENT_MODE") == "development":
+            print("Loading the Assets Locally")
             self.load_assets_from_local()
 
         # In production mode the assets will be downloaded from the Git Repository

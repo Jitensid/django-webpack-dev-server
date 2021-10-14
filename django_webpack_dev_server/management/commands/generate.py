@@ -8,11 +8,14 @@ class Command(BaseCommand):
     help = "Creates a django app which has the frontend configuration"
 
     def add_arguments(self, parser):
+
+        # adding subparser for react
         subparsers = parser.add_subparsers(
             help="Command to create a django app which has the frontend configuration",
             dest="frontend_library_or_framework",
-            required=True,
         )
+
+        subparsers.required = True
 
         # add a parser for react because it can be javascript or typescript
         react_parser = subparsers.add_parser(
@@ -37,7 +40,7 @@ class Command(BaseCommand):
 
     def show_success_message(self, message):
         """
-        :param message: message to be show in stdout with success style
+        :param message: message to be shown in stdout with success style
         """
         self.stdout.write(self.style.SUCCESS(message))
 

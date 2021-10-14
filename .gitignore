@@ -1,6 +1,5 @@
 # ignore byte compiled files created by Python
 __pycache__/
-*.py[cod]
 
 # ignore vscode folder
 .vscode/
@@ -16,5 +15,29 @@ mysite/
 
 django_webpack_dev_server.egg-info/
 
+# ignore the html files of the coverage
+htmlcov/
+
+#  ignore the coverage.xml file
+coverage.xml
+
 # ignore the todo text file
 Todo.txt
+
+# ignore the sqlite file
+db.sqlite3
+
+# ignore the .pytest_cache folder
+.pytest_cache/
+
+# ignore the .tox folder
+.tox/
+
+# ignore the environment variables file
+.env
+
+# ignore the .coverage file
+.coverage
+
+# ignore the manage.py file
+manage.py

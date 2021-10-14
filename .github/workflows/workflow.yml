@@ -1,0 +1,21 @@
+name: Pipeline
+
+on:
+	push:
+		branches:
+			- main
+
+jobs:
+	test:
+		runs-on: windows-latest
+
+		steps:
+
+			- name: Install the Python Modules
+			  run: pip install tox
+
+			- name: Run Tox to run tests for different versions of Python
+			  run: tox -e py38
+
+			- name: Upload coverage to Codecov
+			  uses: codecov/codecov-action@v2

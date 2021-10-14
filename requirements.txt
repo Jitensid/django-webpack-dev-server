@@ -1,0 +1,7 @@
+django
+python-dotenv
+progressbar2
+requests
+pytest
+pytest-django
+coverage

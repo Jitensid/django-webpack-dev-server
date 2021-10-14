@@ -1,12 +1,12 @@
 from setuptools import setup, find_packages
 
 package_description = (
-    "A Django app to create configuration files for frontend libraries."
+    "A Django app to create configuration files for frontend library like React."
 )
 
 setup(
     name="django-webpack-dev-server",
-    version="0.0.14",
+    version="0.0.15",
     packages=find_packages(),
     license="MIT",
     author="Jiten Sidhpura",
@@ -15,15 +15,13 @@ setup(
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/Jitensid/django-webpack-dev-server",
-    download_url="https://github.com/Jitensid/django-webpack-dev-server/archive/refs/tags/0.0.14.tar.gz",
+    download_url="https://github.com/Jitensid/django-webpack-dev-server/archive/refs/tags/0.0.15.tar.gz",
     install_requires=["requests", "progressbar2", "python-dotenv"],
     keywords=[
         "django",
         "webpack",
         "webpack_dev_server",
         "react",
-        "webpack",
-        "webpack-dev-server",
     ],
     classifiers=[
         "Intended Audience :: Developers",
