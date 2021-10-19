@@ -1,4 +1,4 @@
-name: Pipeline
+name: CI
 
 on:
     push:
@@ -11,7 +11,7 @@ jobs:
 
         strategy:
             matrix:
-                python: [3.8]
+                python: [3.6, 3.7, 3.8, 3.9, 3.10]
 
         steps:
             - uses: actions/checkout@v2
@@ -24,7 +24,7 @@ jobs:
             - name: Install the Python Dependencies
               run: pip install tox
 
-            - name: Run Tox
+            - name: Run Tox for ${{ matrix.python }}
               run: tox -e py
 
             - name: Upload coverage to Codecov
