@@ -5,3 +5,4 @@ requests
 pytest
 pytest-django
 coverage
+pre-commit
