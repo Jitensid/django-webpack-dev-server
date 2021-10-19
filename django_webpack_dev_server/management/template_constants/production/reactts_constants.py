@@ -2,7 +2,6 @@ APP_DIRECTORY_NAME = "APP"
 SRC_DIRECTORY_NAME = "src"
 TEMPLATES_DIRECTORY_NAME = "templates"
 
-"https://raw.githubusercontent.com/Jitensid/django-webpack-dev-server/main/assets/reactts/package.json-tpl"
 # Production React Ts Template files having Github Repository Links
 REACTTS_TEMPLATES_URLS_DICT = {
     "package.json-tpl": "https://raw.githubusercontent.com/Jitensid/django-webpack-dev-server/main/assets/reactts/package.json-tpl",
