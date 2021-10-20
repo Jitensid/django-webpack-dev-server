@@ -3,6 +3,8 @@
 [![PyPI version](https://badge.fury.io/py/django-webpack-dev-server.svg)](https://badge.fury.io/py/django-webpack-dev-server)
 [![codecov](https://codecov.io/gh/Jitensid/django-webpack-dev-server/branch/main/graph/badge.svg?token=D952NCAC8I)](https://codecov.io/gh/Jitensid/django-webpack-dev-server)
 [![Requirements Status](https://requires.io/github/Jitensid/django-webpack-dev-server/requirements.svg?branch=main)](https://requires.io/github/Jitensid/django-webpack-dev-server/requirements/?branch=main)
+[![CI](https://github.com/Jitensid/django-webpack-dev-server/actions/workflows/main.yml/badge.svg)](https://github.com/Jitensid/django-webpack-dev-server/actions/workflows/main.yml)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Jitensid/django-webpack-dev-server/main.svg)](https://results.pre-commit.ci/latest/github/Jitensid/django-webpack-dev-server/main)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![License MIT](https://img.shields.io/github/license/Jitensid/django-webpack-dev-server?color=purple)](https://github.com/Jitensid/django-webpack-dev-server/blob/main/LICENSE)
 

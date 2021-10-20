@@ -444,3 +444,48 @@ class TestGeneratorClass:
         )
         assert mocked_load_assets_from_local.called == True
         assert mocked_install_dependencies_and_show_progress_bar.called == True
+
+    @mock.patch.object(
+        Generator, "install_dependencies_and_show_progress_bar", return_value=None
+    )
+    @mock.patch.object(Generator, "download_template_files", return_value=None)
+    @mock.patch.object(Generator, "create_required_directories", return_value=None)
+    @mock.patch("django.core.management.call_command")
+    @mock.patch.object(Generator, "check_system_requirements", return_value=None)
+    def test_generate_in_production_mode(
+        self,
+        mocked_generator_check_system_requirements,
+        mocked_management_call_command,
+        mocked_create_required_directories,
+        mocked_download_template_files,
+        mocked_install_dependencies_and_show_progress_bar,
+        app_generator,
+    ):
+
+        """
+        Function to test the generate method of the Generator Class
+        """
+
+        # set the environment variable SOFTWARE_ENVIRONMENT_MODE to production
+        # to test that the download_template_files method is called or not
+
+        # create the monkeypatch object
+        monkeypatch = pytest.MonkeyPatch()
+
+        # set the environment variable SOFTWARE_ENVIRONMENT_MODE to production
+        monkeypatch.setenv("SOFTWARE_ENVIRONMENT_MODE", "production")
+
+        # assert that the environment variable has changed
+        assert os.environ["SOFTWARE_ENVIRONMENT_MODE"] == "production"
+
+        # call the method to test
+        app_generator.generate()
+
+        # assert that all the methods of the Generator class are called
+        assert mocked_generator_check_system_requirements.called == True
+        assert mocked_create_required_directories.called == True
+        mocked_management_call_command.assert_called_once_with(
+            "startapp", app_generator.app_name
+        )
+        assert mocked_download_template_files.called == True
+        assert mocked_install_dependencies_and_show_progress_bar.called == True
