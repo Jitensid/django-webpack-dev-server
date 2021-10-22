@@ -8,8 +8,7 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![License MIT](https://img.shields.io/github/license/Jitensid/django-webpack-dev-server?color=purple)](https://github.com/Jitensid/django-webpack-dev-server/blob/main/LICENSE)
 
-Django Webpack Dev Server is a command line Django reusable app to setup configuration files for React. It uses webpack and webpack_dev_server to
-bundle your frontend code.
+Django Webpack Dev Server is a command line Django reusable app to setup configuration files for React. It uses webpack and webpack_dev_server to bundle your frontend code.
 
 ## Installation
 
@@ -17,7 +16,7 @@ Install using pip
 
 `pip install django-webpack-dev-server`
 
-## Supported Frontend Library
+## Package Supports
 
 1.  React (Javascript)
 2.  React (Typescript)

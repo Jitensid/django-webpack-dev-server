@@ -66,17 +66,17 @@ class Command(BaseCommand):
             app_name=app_name,
             frontend_library_or_framework=frontend_library_or_framework,
         )
-
         # start building the new django app
         app_generator.generate()
 
         # show success messages to the user after the command is successfully
         # executed
-        self.show_success_message(" Your App is Ready !!!")
+        self.show_success_message("\n\nYour App is Ready !!!")
         self.show_success_message(
-            "Do not forget to add {0} in  the INSTALLED_APPS in the project settings file".format(
-                app_name
-            )
+            f"Add {app_name} in the INSTALLED_APPS list in the project's settings.py file"
+        )
+        self.show_success_message(
+            f"Add {app_name}.urls in urlpatterns of the project's urls.py"
         )
         self.show_success_message(
             "Start the Django Server and cd into your app and run npm start"
