@@ -1,9 +1,4 @@
 django
-python-dotenv
-progressbar2
-requests
-pytest
-pytest-django
-coverage
-pre-commit
-black
+-r requirements/requirements-dev.txt
+-r requirements/requirements-lint.txt
+-r requirements/requirements-testing.txt

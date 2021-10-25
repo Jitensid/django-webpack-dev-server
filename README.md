@@ -57,9 +57,11 @@ Install using pip
 
 ## Important Links
 
-1. [Check out Tech with Tim's Youtube Playlist for a detailed explanation in building Django and React Full Stack App.](https://www.youtube.com/watch?v=JD-age0BPVo&list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxvi4j)
+1. [Demo Video of the Package](https://www.youtube.com/watch?v=6c-lPkKzI_E)
 
-2. [Webpack Documentation if you want to change configurations.](https://v4.webpack.js.org/concepts/)
+2. [Check out Tech with Tim's Youtube Playlist for a detailed explanation in building Django and React Full Stack App.](https://www.youtube.com/watch?v=JD-age0BPVo&list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxvi4j)
+
+3. [Webpack Documentation](https://v4.webpack.js.org/concepts/)
 
 ## Contributions
 
