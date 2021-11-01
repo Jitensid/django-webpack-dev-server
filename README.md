@@ -10,6 +10,9 @@
 
 Django Webpack Dev Server is a command line Django reusable app to setup configuration files for React. It uses webpack and webpack_dev_server to bundle your frontend code.
 
+
+![React+Django](https://user-images.githubusercontent.com/46622106/139619283-39d53e00-25d6-4f3b-aee9-e47403564ca3.gif)
+
 ## Installation
 
 Install using pip
