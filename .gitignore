@@ -13,6 +13,9 @@ dist/
 # ignore the django mysite project used to test this package
 mysite/
 
+# ignore the frontend django app
+frontend/
+
 django_webpack_dev_server.egg-info/
 
 # ignore the html files of the coverage
