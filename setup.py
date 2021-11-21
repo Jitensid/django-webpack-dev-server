@@ -4,6 +4,9 @@ package_description = (
     "A Django app to setup configuration files for React in a Django Project."
 )
 
+# to ignore the directories while creating wheel distribution
+exclude_directories_for_wheel_distribution = ["tests*", "mysite"]
+
 keywords_list = [
     "django",
     "react",
@@ -18,8 +21,8 @@ keywords_list = [
 
 setup(
     name="django-webpack-dev-server",
-    version="0.0.17",
-    packages=find_packages(),
+    version="0.0.18",
+    packages=find_packages(exclude=exclude_directories_for_wheel_distribution),
     license="MIT",
     author="Jiten Sidhpura",
     author_email="jitensidhpura2000@gmail.com",
@@ -27,7 +30,7 @@ setup(
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/Jitensid/django-webpack-dev-server",
-    download_url="https://github.com/Jitensid/django-webpack-dev-server/archive/refs/tags/0.0.17.tar.gz",
+    download_url="https://github.com/Jitensid/django-webpack-dev-server/archive/refs/tags/0.0.18.tar.gz",
     install_requires=["requests", "progressbar2", "python-dotenv"],
     keywords=keywords_list,
     classifiers=[
