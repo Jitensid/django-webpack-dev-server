@@ -10,7 +10,7 @@ exclude_directories_for_wheel_distribution = ["tests*", "mysite"]
 keywords_list = [
     "django",
     "react",
-    "webpack4",
+    "webpack5",
     "webpack_dev_server",
     "command-line",
     "project-generator",
@@ -21,7 +21,7 @@ keywords_list = [
 
 setup(
     name="django-webpack-dev-server",
-    version="0.0.18",
+    version="1.0.0",
     packages=find_packages(exclude=exclude_directories_for_wheel_distribution),
     license="MIT",
     author="Jiten Sidhpura",
@@ -30,7 +30,7 @@ setup(
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/Jitensid/django-webpack-dev-server",
-    download_url="https://github.com/Jitensid/django-webpack-dev-server/archive/refs/tags/0.0.18.tar.gz",
+    download_url="https://github.com/Jitensid/django-webpack-dev-server/archive/refs/tags/1.0.0.tar.gz",
     install_requires=["requests", "progressbar2", "python-dotenv"],
     keywords=keywords_list,
     classifiers=[
