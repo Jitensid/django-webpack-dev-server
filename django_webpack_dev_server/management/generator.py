@@ -26,19 +26,6 @@ class Generator:
     Base Class to create a django app with the necessary frontend configuration
     """
 
-    # app_name is the name of the django app which will have the frontend configuration
-    app_name = None
-
-    # static_directory_name is the name of the the static directory inside the django app
-    static_directory_name = None
-
-    # frontend_library_or_framework denotes the frontend framework or library requested from the command line
-    frontend_library_or_framework = None
-
-    # shell_parameter = True for windows based system
-    # shell_parameter = False for non windows based system
-    shell_parameter = None
-
     # set the values of app_name, frontend_library_or_framework in the constructor
     def __init__(self, app_name, frontend_library_or_framework):
         """
@@ -46,11 +33,19 @@ class Generator:
         :param app_name str: Name of the django app with frontend configuration
         :param frontend_library_or_framework str: Denotes the configuration to setup in the django app.
         """
+
+        # app_name is the name of the django app which will have the frontend configuration
         self.app_name = app_name
+
+        # frontend_library_or_framework denotes the frontend framework or library requested from the command line
         self.frontend_library_or_framework = frontend_library_or_framework
+
+        # static_directory_name is the name of the the static directory inside the django app
         self.static_directory_name = "static"
 
         # set the shell_parameter according to the operating system of the user
+        # shell_parameter = True for windows based system
+        # shell_parameter = False for non windows based system
         self.shell_parameter = sys.platform == constants.WINDOWS_OS_IDENTIFIER
 
     def validate_appname(self):
@@ -154,7 +149,7 @@ class Generator:
 
     def get_target_path_of_template_file(self, filename, directory_type):
         """
-        Finds the path where the file after modifications
+        Finds the path where the file will be placed after modifications
         :param filename str: name of the file to get the path
         :param directory_type str: name of the directory where file will be stored
         :return target_filepath str: final filepath of the file after it is substituted with the parameters
