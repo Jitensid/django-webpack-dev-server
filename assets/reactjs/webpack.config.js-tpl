@@ -70,9 +70,6 @@ module.exports = {
 		minimize: true,
 	},
 	devServer: {
-		contentBase: './static/$app_name/',
-		hot: true,
-		inline: true,
 		proxy: {
 			'!/static/$app_name/**': {
 				target: 'http://localhost:8000', // points to django dev server
@@ -81,5 +78,4 @@ module.exports = {
 		},
 		open: true,
 	},
-	plugins: [new webpack.HotModuleReplacementPlugin()],
 };
