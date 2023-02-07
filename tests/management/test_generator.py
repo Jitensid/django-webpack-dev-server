@@ -12,7 +12,6 @@ from django_webpack_dev_server.management.generator import Generator
 # A pytest fixture used to create a Generator object
 @pytest.fixture
 def app_generator():
-
     # Create the Generator object
     app_generator = Generator(
         app_name="frontend", frontend_library_or_framework="react_javascript"
@@ -224,7 +223,6 @@ class TestGeneratorClass:
 
         # Check if CommandError is raised when the method is called
         with pytest.raises(CommandError) as CommandErrorException:
-
             exception_message = "Error while writing in the file"
 
             # Raise OSError during the file write operation
@@ -243,7 +241,6 @@ class TestGeneratorClass:
 
         # Check if CommandError is raised when the method is called
         with pytest.raises(CommandError) as CommandErrorException:
-
             exception_message = "Error while writing in the file"
 
             # Raise OSError during the file write operation
@@ -304,7 +301,6 @@ class TestGeneratorClass:
         mocked_subprocess_popen,
         app_generator,
     ):
-
         """
         Function to test the test_install_dependencies method of the Generator Class
         """
@@ -349,7 +345,6 @@ class TestGeneratorClass:
         mocked_queue_Queue,
         app_generator,
     ):
-
         """
         Function to test the install_dependencies_and_show_progress_bar method of the Generator Class
         """
@@ -428,7 +423,6 @@ class TestGeneratorClass:
         mocked_install_dependencies_and_show_progress_bar,
         app_generator,
     ):
-
         """
         Function to test the generate method of the Generator Class
         """
@@ -461,7 +455,6 @@ class TestGeneratorClass:
         mocked_install_dependencies_and_show_progress_bar,
         app_generator,
     ):
-
         """
         Function to test the generate method of the Generator Class
         """
