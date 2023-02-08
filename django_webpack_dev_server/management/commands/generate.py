@@ -8,7 +8,6 @@ class Command(BaseCommand):
     help = "Creates a django app which has the frontend configuration"
 
     def add_arguments(self, parser):
-
         # adding subparser for react
         subparsers = parser.add_subparsers(
             help="Command to create a django app which has the frontend configuration",
@@ -45,7 +44,6 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS(message))
 
     def handle(self, *args, **options):
-
         # get the django app_name and the frontend_library_or_framework
         # specified by the user
         app_name = options["app_name"]

@@ -197,7 +197,6 @@ class Generator:
 
         # iterate all the tempate filenames
         for directory_type, filename, download_url in template_files:
-
             # get the path where the file will be stored
             target_filepath = self.get_target_path_of_template_file(
                 filename, directory_type
@@ -208,7 +207,6 @@ class Generator:
 
             # write the contents of the file in the appropriate location
             with open(target_filepath, "wb") as target_file:
-
                 try:
                     target_file.write(download_file.content)
 
@@ -228,7 +226,6 @@ class Generator:
 
             # write the updated file in the appropriate location
             with open(target_filepath, "w") as target_file:
-
                 try:
                     target_file.write(modified_file_contents)
 
@@ -252,7 +249,6 @@ class Generator:
 
         # iterate all the tempate filenames
         for directory_type, filename, local_asset_file_path in template_files:
-
             # get the path where the file will be stored
             target_filepath = self.get_target_path_of_template_file(
                 filename, directory_type
@@ -272,7 +268,6 @@ class Generator:
 
             # write the updated file in the appropriate location
             with open(target_filepath, "w") as target_file:
-
                 try:
                     target_file.write(modified_file_contents)
 
@@ -301,7 +296,6 @@ class Generator:
 
         # get any data genrated by the command and display it on stdout
         while True:
-
             # read output lines one line at a time
             realtime_output = command.stdout.readline()
 
